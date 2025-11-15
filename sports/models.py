@@ -54,6 +54,8 @@ class Team(models.Model):
     name = models.CharField(max_length=50)
     branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, default="COMPS")
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
+    manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='managed_teams')
+    captain = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='captain_teams')
     members = models.ManyToManyField(User, related_name="team_members")
     
 

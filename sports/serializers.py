@@ -52,23 +52,71 @@ class TeamSerializer(serializers.ModelSerializer):
         write_only=True,
         required=False
     )
+    manager = UserSerializer(read_only=True)
+    manager_id = serializers.IntegerField(write_only=True, required=False)
+    captain = UserSerializer(read_only=True)
+    captain_id = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
         model = Team
-        fields = ['id', 'name', 'branch', 'sport', 'sport_id', 'members', 'member_ids']
+        fields = ['id', 'name', 'branch', 'sport', 'sport_id', 'members', 'member_ids', 'manager', 'manager_id', 'captain', 'captain_id']
 
     def create(self, validated_data):
         member_ids = validated_data.pop('member_ids', [])
-        team = Team.objects.create(**validated_data)
+        sport_id = validated_data.pop('sport_id')
+        manager_id = validated_data.pop('manager_id', None)
+        captain_id = validated_data.pop('captain_id', None)
+
+        try:
+            sport = Sport.objects.get(pk=sport_id)
+        except Sport.DoesNotExist:
+            raise serializers.ValidationError({"sport_id": "Invalid sport id"})
+
+        request_user = None
+        if self.context and self.context.get('request'):
+            request_user = self.context['request'].user
+
+        manager = None
+        if manager_id:
+            manager = User.objects.filter(pk=manager_id).first()
+        elif request_user:
+            manager = request_user
+
+        captain = None
+        if captain_id:
+            captain = User.objects.filter(pk=captain_id).first()
+        else:
+            captain = manager
+
+        team = Team.objects.create(sport=sport, manager=manager, captain=captain, **validated_data)
+
         if member_ids:
-            team.members.set(User.objects.filter(moodleID__in=member_ids))
+            team.members.set(User.objects.filter(pk__in=member_ids))
         return team
 
     def update(self, instance, validated_data):
         member_ids = validated_data.pop('member_ids', None)
+        sport_id = validated_data.pop('sport_id', None)
+        manager_id = validated_data.pop('manager_id', None)
+        captain_id = validated_data.pop('captain_id', None)
+
+        if sport_id is not None:
+            try:
+                sport = Sport.objects.get(pk=sport_id)
+                instance.sport = sport
+            except Sport.DoesNotExist:
+                raise serializers.ValidationError({"sport_id": "Invalid sport id"})
+
+        if manager_id is not None:
+            instance.manager = User.objects.filter(pk=manager_id).first()
+
+        if captain_id is not None:
+            instance.captain = User.objects.filter(pk=captain_id).first()
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+
         if member_ids is not None:
-            instance.members.set(User.objects.filter(moodleID__in=member_ids))
+            instance.members.set(User.objects.filter(pk__in=member_ids))
         return instance

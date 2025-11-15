@@ -126,14 +126,15 @@ def team_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = TeamSerializer(data=request.data)
+        serializer = TeamSerializer(data=request.data, context={'request': request})
+        sport_id = request.data.get('sport_id')
+        sport = get_object_or_404(Sport, pk=sport_id)
+        if not sport.isTeamBased:
+            return Response(
+                {"error": "This sport does not support teams"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         if serializer.is_valid():
-            sport = get_object_or_404(Sport, pk=serializer.validated_data['sport_id'])
-            if not sport.isTeamBased:
-                return Response(
-                    {"error": "This sport does not support teams"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -145,7 +146,9 @@ def team_detail(request, pk):
 
     if (request.user not in team.members.all() and
         request.user != team.sport.primary and
-        request.user not in team.sport.secondary.all()):
+        request.user not in team.sport.secondary.all() and
+        request.user != team.manager and
+        request.user != team.captain):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
@@ -153,7 +156,7 @@ def team_detail(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = TeamSerializer(team, data=request.data)
+        serializer = TeamSerializer(team, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -161,7 +164,8 @@ def team_detail(request, pk):
 
     elif request.method == 'DELETE':
         if (request.user != team.sport.primary and
-            request.user not in team.sport.secondary.all()):
+            request.user not in team.sport.secondary.all() and
+            request.user != team.manager):
             return Response(status=status.HTTP_403_FORBIDDEN)
         team.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
