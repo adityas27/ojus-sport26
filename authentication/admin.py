@@ -22,7 +22,7 @@ class StudentAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('moodleID', 'username', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'phone_number', 'profile_image')}),
-        ('Access Control', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_prohibited')}),
+        ('Access Control', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_prohibited', 'is_manageing')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
         ('Groups', {'fields': ('groups',)}),
         ('User Permissions', {'fields': ('user_permissions',)}),

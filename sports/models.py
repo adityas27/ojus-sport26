@@ -11,7 +11,7 @@ class Sport(models.Model):
     isTeamBased = models.BooleanField(default=False)
     primary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='primary_sports')
     secondary = models.ManyToManyField(User, related_name='secondary_sports')
-
+    venue = models.CharField(max_length=50, default="")
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -58,4 +58,13 @@ class Team(models.Model):
     captain = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='captain_teams')
     members = models.ManyToManyField(User, related_name="team_members")
     
+
+class Results(models.Model):
+    player = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="result_player")
+    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="result_team")
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name="result_sport")
+    position = models.IntegerField()
+    date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, related_name="result_user")
+
 
