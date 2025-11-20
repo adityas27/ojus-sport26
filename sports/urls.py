@@ -19,5 +19,11 @@ urlpatterns = [
     path('teams/', views.team_list, name='team-list'),
     path('teams/<int:pk>/', views.team_detail, name='team-detail'),
 
-    # TASK : Setup and endpoint to filter out registerations based on sport (use slugs)
+    # Leaderboard URLS
+    path('leaderboard/department/', views.department_leaderboard, name='department-leaderboard'),
+    path('leaderboard/sport/<slug:sport_slug>/', views.sport_leaderboard, name='sport-leaderboard'),
+    path('leaderboard/sport/<slug:sport_slug>/update/', views.update_sport_leaderboard,
+         name='update-sport-leaderboard'),
+    path('leaderboard/result/<int:result_id>/adjust/', views.adjust_result_points, name='adjust-result-points'),
+    path('leaderboard/sport/<slug:sport_slug>/finalize/', views.finalize_sport_standings, name='finalize-sport'),
 ]
