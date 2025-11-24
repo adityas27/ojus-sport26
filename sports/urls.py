@@ -26,4 +26,5 @@ urlpatterns = [
          name='update-sport-leaderboard'),
     path('leaderboard/result/<int:result_id>/adjust/', views.adjust_result_points, name='adjust-result-points'),
     path('leaderboard/sport/<slug:sport_slug>/finalize/', views.finalize_sport_standings, name='finalize-sport'),
+    path('leaderboard/sport/<slug:slug>/reset/', views.reset_leaderboard, name='reset-leaderboard'),
 ]
