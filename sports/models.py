@@ -128,3 +128,22 @@ def calculate_leaderboard_data(sender, instance, **kwargs):
 
         if registration:
             instance.branch = registration.branch
+
+
+from django.db import models
+
+
+class LeaderboardResult(models.Model):
+    sport = models.ForeignKey('Sport', on_delete=models.CASCADE, related_name='leaderboard_results')
+    branch = models.CharField(max_length=100)
+    points = models.IntegerField(default=0)
+    rank = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-points', 'branch']
+        unique_together = ['sport', 'branch']
+
+    def __str__(self):
+        return f"{self.branch} - {self.sport.name}: {self.points} points"

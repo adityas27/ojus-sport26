@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum, Max
 from rest_framework.views import APIView
 from authentication.models import Student
-from .models import Sport, Registration, Team, Results
+from .models import Sport, Registration, Team, Results, LeaderboardResult
 from .serializers import SportSerializer, RegistrationSerializer, TeamSerializer, ResultsSerializer, \
     ResultUpdateSerializer
 from django.db import transaction
@@ -398,3 +398,26 @@ def department_leaderboard(request):
 @permission_classes([IsAuthenticated])
 def check_user_admin_status(request):
     return Response({"is_staff": request.user.is_staff}, status=status.HTTP_200_OK)
+
+#Reset results (Only before Finalizing it!)
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def reset_leaderboard(request, slug):
+    """Reset all standings for a sport"""
+    try:
+        sport = Sport.objects.get(slug=slug)
+
+        # Reset all leaderboard results
+        LeaderboardResult.objects.filter(sport=sport).update(
+            score=0,
+            position=None,
+            points=0
+        )
+
+        # Reset sport status
+        sport.is_finalized = False
+        sport.save()
+
+        return Response({"message": "Leaderboard reset successfully"}, status=200)
+    except Sport.DoesNotExist:
+        return Response({"error": "Sport not found"}, status=404)
