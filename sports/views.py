@@ -6,9 +6,14 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum, Max
 from rest_framework.views import APIView
 from authentication.models import Student
-from .models import Sport, Registration, Team, Results, LeaderboardResult
-from .serializers import SportSerializer, RegistrationSerializer, TeamSerializer, ResultsSerializer, \
-    ResultUpdateSerializer
+from .models import Sport, Registration, Team, Results
+from .serializers import SportSerializer, RegistrationSerializer, TeamSerializer
+from .serializers import (
+    ResultsSerializer,
+    ResultUpdateSerializer,
+    ResultScoreAdjustSerializer,
+    DepartmentLeaderboardSerializer
+)
 from django.db import transaction
 
 
@@ -259,64 +264,116 @@ def admin_registration_search_by_moodle(request, moodleID):
 
 
 # Leaderboard Views(It consists of sport level as well as department level leaderboard and only Admin can change the standings)
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def sport_leaderboard(request, sport_slug):
+    """
+    Get leaderboard for a specific sport with auto-sync logic.
+    Automatically creates Results entries for any new teams/players.
+    """
     sport = get_object_or_404(Sport, slug=sport_slug)
-    ''' It uses auto-sync logic, whenever a participant or team registered for a
-        sport then they are automatically listed in the leaderboards '''
+
+    # Auto-sync logic: Add missing teams/players to Results
     if sport.isTeamBased:
+        # Get all teams for this sport that don't have results yet
         existing_team_ids = Results.objects.filter(sport=sport).values_list('team_id', flat=True)
         missing_teams = Team.objects.filter(sport=sport).exclude(id__in=existing_team_ids)
-        if missing_teams.exists():
-            last_pos = Results.objects.filter(sport=sport).aggregate(Max('position'))['position__max'] or 0
-            new_results = []
-            for i, team in enumerate(missing_teams):
-                new_results.append(Results(
-                    sport=sport, team=team, branch=team.branch,
-                    position=last_pos + i + 1, points=0, score=0
-                ))
-            Results.objects.bulk_create(new_results)
-    else:
-        existing_player_ids = Results.objects.filter(sport=sport).values_list('player_id', flat=True)
-        missing_registrations = Registration.objects.filter(sport=sport).exclude(student__in=existing_player_ids)
-        if missing_registrations.exists():
-            last_pos = Results.objects.filter(sport=sport).aggregate(Max('position'))['position__max'] or 0
-            new_results = []
-            for i, reg in enumerate(missing_registrations):
-                new_results.append(Results(
-                    sport=sport, player=reg.student, branch=reg.branch,
-                    position=last_pos + i + 1, points=0, score=0
-                ))
-            Results.objects.bulk_create(new_results)
 
+        if missing_teams.exists():
+            # Calculate next position (count existing results + 1)
+            next_position = Results.objects.filter(sport=sport).count() + 1
+
+            # Use get_or_create to avoid race conditions
+            for team in missing_teams:
+                Results.objects.get_or_create(
+                    sport=sport,
+                    team=team,
+                    defaults={
+                        'branch': team.branch,
+                        'position': next_position,
+                        'points': 0,
+                        'score': 0
+                    }
+                )
+                next_position += 1
+    else:
+        # Individual sport - sync with registrations
+        existing_player_ids = Results.objects.filter(sport=sport).values_list('player_id', flat=True)
+        missing_registrations = Registration.objects.filter(
+            sport=sport
+        ).exclude(student_id__in=existing_player_ids).select_related('student')
+
+        if missing_registrations.exists():
+            # Calculate next position
+            next_position = Results.objects.filter(sport=sport).count() + 1
+
+            # Use get_or_create to avoid race conditions
+            for reg in missing_registrations:
+                Results.objects.get_or_create(
+                    sport=sport,
+                    player=reg.student,
+                    defaults={
+                        'branch': reg.branch,
+                        'position': next_position,
+                        'points': 0,
+                        'score': 0
+                    }
+                )
+                next_position += 1
+
+    # ✅ FIX: Sort by position (rank), NOT by score
     results = Results.objects.filter(
-        sport=sport,
-    ).select_related('team', 'player', 'sport').order_by('position')
+        sport=sport
+    ).select_related('team', 'player', 'sport').order_by('position')  # ← Changed from order_by('-score')
+
     serializer = ResultsSerializer(results, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])
 def update_sport_leaderboard(request, sport_slug):
+
     if not isinstance(request.data, list):
         return Response(
             {"error": "Data must be a list of results."},
             status=status.HTTP_400_BAD_REQUEST
         )
+
     sport = get_object_or_404(Sport, slug=sport_slug)
+
+    # Check if sport is already finalized
+    if sport.is_finalized:
+        return Response(
+            {"error": "Cannot update leaderboard. Sport standings are already finalized."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Validate incoming data
     serializer = ResultUpdateSerializer(data=request.data, many=True)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Create position updates mapping
     rank_updates = {item['id']: item['position'] for item in serializer.validated_data}
     result_ids = list(rank_updates.keys())
-    results_to_update = list(Results.objects.filter(id__in=result_ids, sport=sport))
+
+    # Fetch results to update
+    results_to_update = list(
+        Results.objects.filter(id__in=result_ids, sport=sport).select_for_update()
+    )
+
+    # Verify all IDs exist for this sport
     if len(results_to_update) != len(rank_updates):
         return Response(
-            {"error": "Mismatched or invalid result IDs for this sport."},
+            {"error": "Some result IDs are invalid or don't belong to this sport."},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+    # Helper function to calculate department points
     def calculate_dept_points(position):
+        """Calculate department points: 3 for 1st, 2 for 2nd, 1 for 3rd"""
         if position == 1:
             return 3
         elif position == 2:
@@ -324,100 +381,261 @@ def update_sport_leaderboard(request, sport_slug):
         elif position == 3:
             return 1
         return 0
+
     try:
         with transaction.atomic():
+            # Update positions and recalculate points
             for result in results_to_update:
                 new_position = rank_updates[result.id]
                 result.position = new_position
                 result.points = calculate_dept_points(new_position)
 
+            # Bulk update for better performance
             Results.objects.bulk_update(results_to_update, ['position', 'points'])
 
-        updated_results = Results.objects.filter(sport=sport).order_by('position')
+        # Return updated results
+        updated_results = Results.objects.filter(
+            sport=sport
+        ).select_related('team', 'player', 'sport').order_by('position')
+
         response_serializer = ResultsSerializer(updated_results, many=True)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response(
-            {"error": f"An unexpected error occurred: {str(e)}"},
+            {"error": f"Failed to update leaderboard: {str(e)}"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
-def adjust_result_points(request, result_id):
+def adjust_result_score(request, result_id):
+    """
+    Adjust the score of a single result entry by +1 or -1.
+    Expects: {"action": "add"} or {"action": "subtract"}
+    """
     try:
-        result = Results.objects.get(id=result_id)
+        result = Results.objects.select_related('sport').get(id=result_id)
     except Results.DoesNotExist:
-        return Response({"error": "Result not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    action = request.data.get('action')
-    if action == 'add':
-        result.score += 1
-    elif action == 'subtract' and result.score > 0:
-        result.score -= 1
-    else:
         return Response(
-            {"error": "Invalid action. Use 'add' or 'subtract'."},
+            {"error": "Result not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    # Check if sport is finalized
+    if result.sport.is_finalized:
+        return Response(
+            {"error": "Cannot adjust score. Sport standings are finalized."},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+    # Validate action using serializer
+    serializer = ResultScoreAdjustSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    action = serializer.validated_data['action']
+
+    # Apply score adjustment with validation
+    if action == 'add':
+        if result.score >= 9999:  # Set reasonable upper limit
+            return Response(
+                {"error": "Score has reached maximum limit"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        result.score += 1
+    elif action == 'subtract':
+        if result.score <= 0:
+            return Response(
+                {"error": "Score cannot be negative"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        result.score -= 1
+
     result.save()
-    return Response({'id': result.id, 'score': result.score}, status=status.HTTP_200_OK)
+
+    return Response(
+        {
+            'id': result.id,
+            'score': result.score,
+            'message': f'Score {"increased" if action == "add" else "decreased"} successfully'
+        },
+        status=status.HTTP_200_OK
+    )
+
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def finalize_sport_standings(request, sport_slug):
+    """
+    Finalize standings for a sport. Once finalized, rankings cannot be changed.
+    """
     sport = get_object_or_404(Sport, slug=sport_slug)
-    sport.is_finalized = True
-    sport.save()
-    return Response({
-        'message': f'{sport.name} rankings finalized.',
-        'is_finalized': True
-    }, status=status.HTTP_200_OK)
+
+    # Check if already finalized
+    if sport.is_finalized:
+        return Response(
+            {"error": "Sport standings are already finalized."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Check if there are any results to finalize
+    results_count = Results.objects.filter(sport=sport).count()
+    if results_count == 0:
+        return Response(
+            {"error": "Cannot finalize. No results exist for this sport."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        with transaction.atomic():
+            sport.is_finalized = True
+            sport.save()
+
+        return Response(
+            {
+                'message': f'{sport.name} standings finalized successfully.',
+                'sport': sport.name,
+                'is_finalized': True,
+                'results_count': results_count
+            },
+            status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return Response(
+            {"error": f"Failed to finalize standings: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def department_leaderboard(request):
+    """
+    Get overall department leaderboard aggregated from all finalized sports.
+    Only counts points from sports that have been finalized.
+    """
+    # Get all finalized sports
     finalized_sport_ids = Sport.objects.filter(is_finalized=True).values_list('id', flat=True)
 
+    if not finalized_sport_ids:
+        return Response(
+            {
+                "message": "No sports have been finalized yet.",
+                "leaderboard": []
+            },
+            status=status.HTTP_200_OK
+        )
+
+    # Aggregate points by branch
     leaderboard_data = Results.objects.filter(
-        sport_id__in=finalized_sport_ids
+        sport_id__in=finalized_sport_ids,
+        branch__isnull=False
     ).values('branch').annotate(
         total_points=Sum('points')
     ).order_by('-total_points')
-    formatted_data = [
-        {
-            "branch": entry['branch'],
-            "total_points": entry['total_points'] or 0
-        }
-        for entry in leaderboard_data if entry['branch']
-    ]
-    return Response(formatted_data, status=status.HTTP_200_OK)
+
+    # Add rank to each entry
+    formatted_data = []
+    current_rank = 1
+    for entry in leaderboard_data:
+        if entry['branch']:  # Skip null branches
+            formatted_data.append({
+                "rank": current_rank,
+                "branch": entry['branch'],
+                "total_points": entry['total_points'] or 0
+            })
+            current_rank += 1
+
+    # Use serializer for consistent output
+    serializer = DepartmentLeaderboardSerializer(formatted_data, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def reset_sport_leaderboard(request, sport_slug):
+    """
+    Reset all standings for a sport (only if not finalized).
+    This will reset all positions to sequential order and scores to 0.
+    """
+    sport = get_object_or_404(Sport, slug=sport_slug)
+
+    # Prevent reset if sport is finalized
+    if sport.is_finalized:
+        return Response(
+            {"error": "Cannot reset. Sport standings are finalized. Unfinalize first."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        with transaction.atomic():
+            # Get all results for this sport
+            results = Results.objects.filter(sport=sport).order_by('id')
+
+            # Reset positions sequentially and scores to 0
+            for index, result in enumerate(results, start=1):
+                result.position = index
+                result.score = 0
+                result.points = 0  # Will be recalculated by signal if position is 1-3
+
+            # Bulk update
+            Results.objects.bulk_update(results, ['position', 'score', 'points'])
+
+        return Response(
+            {
+                "message": f"Leaderboard for {sport.name} reset successfully.",
+                "sport": sport.name,
+                "results_reset": results.count()
+            },
+            status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return Response(
+            {"error": f"Failed to reset leaderboard: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def unfinalize_sport_standings(request, sport_slug):
+    """
+    Unfinalize a sport to allow editing rankings again.
+    """
+    sport = get_object_or_404(Sport, slug=sport_slug)
+
+    if not sport.is_finalized:
+        return Response(
+            {"error": "Sport is not finalized."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        with transaction.atomic():
+            sport.is_finalized = False
+            sport.save()
+
+        return Response(
+            {
+                'message': f'{sport.name} standings unfinalized. Rankings can now be edited.',
+                'sport': sport.name,
+                'is_finalized': False
+            },
+            status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return Response(
+            {"error": f"Failed to unfinalize standings: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def check_user_admin_status(request):
-    return Response({"is_staff": request.user.is_staff}, status=status.HTTP_200_OK)
-
-#Reset results (Only before Finalizing it!)
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def reset_leaderboard(request, slug):
-    """Reset all standings for a sport"""
-    try:
-        sport = Sport.objects.get(slug=slug)
-
-        # Reset all leaderboard results
-        LeaderboardResult.objects.filter(sport=sport).update(
-            score=0,
-            position=None,
-            points=0
-        )
-
-        # Reset sport status
-        sport.is_finalized = False
-        sport.save()
-
-        return Response({"message": "Leaderboard reset successfully"}, status=200)
-    except Sport.DoesNotExist:
-        return Response({"error": "Sport not found"}, status=404)
+    return Response({
+        "is_staff": request.user.is_staff,
+        "is_superuser": request.user.is_superuser
+    }, status=status.HTTP_200_OK)

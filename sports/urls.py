@@ -5,15 +5,16 @@ app_name = 'sports'
 
 urlpatterns = [
     # Sport URLs
-    path('sports/', views.sport_list, name='sport-list'), # will be handled in frontend
-    path('sports/<int:pk>/', views.sport_detail, name='sport-detail'), # will be handled in frontend
-    
+    path('sports/', views.sport_list, name='sport-list'),
+    path('sports/<int:pk>/', views.sport_detail, name='sport-detail'),
+
     # Registration URLs
-    path('registrations/', views.registration_list, name='registration-list'), # Post feature is implemented, GET is to be worked up on
+    path('registrations/', views.registration_list, name='registration-list'),
     path('registrations/<int:pk>/', views.registration_detail, name='registration-detail'),
     path('registrations/sport/<slug:sport_slug>/', views.registration_by_sport, name='registration-by-sport'),
     path('user-registration-info/', views.user_registration_info, name='user-registration-info'),
-    path("registration-search/<int:moodleID>/", views.admin_registration_search_by_moodle, name="admin-registration-search-moodle"),
+    path("registration-search/<int:moodleID>/", views.admin_registration_search_by_moodle,
+         name="admin-registration-search-moodle"),
 
     # Team URLs
     path('teams/', views.team_list, name='team-list'),
@@ -24,7 +25,13 @@ urlpatterns = [
     path('leaderboard/sport/<slug:sport_slug>/', views.sport_leaderboard, name='sport-leaderboard'),
     path('leaderboard/sport/<slug:sport_slug>/update/', views.update_sport_leaderboard,
          name='update-sport-leaderboard'),
-    path('leaderboard/result/<int:result_id>/adjust/', views.adjust_result_points, name='adjust-result-points'),
+    path('leaderboard/result/<int:result_id>/adjust/', views.adjust_result_score, name='adjust-result-score'),
+    # ✅ FIXED
     path('leaderboard/sport/<slug:sport_slug>/finalize/', views.finalize_sport_standings, name='finalize-sport'),
-    path('leaderboard/sport/<slug:slug>/reset/', views.reset_leaderboard, name='reset-leaderboard'),
+    path('leaderboard/sport/<slug:sport_slug>/reset/', views.reset_sport_leaderboard, name='reset-sport-leaderboard'),
+    # ✅ FIXED
+    path('leaderboard/sport/<slug:sport_slug>/unfinalize/', views.unfinalize_sport_standings, name='unfinalize-sport'),
+    # ✅ NEW
+
+    path('auth/status/', views.check_user_admin_status, name='check-status'),
 ]
