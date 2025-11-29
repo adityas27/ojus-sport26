@@ -54,6 +54,21 @@ class Registration(models.Model):
         return f"{self.student.username} - {self.sport.name}"
 
 class Team(models.Model):
+    BRANCH_CHOICES = [
+        ('COMPS', 'Computer Engineering'),
+        ('IT', 'Information Technology'),
+        ('AIML', 'CSE Artificial Intelligence and Machine Learning'),
+        ('DS', 'CSE Data Science'),
+        ('MECH', 'Mechanical Engineering'),
+        ('CIVIL', 'Civil Engineering'),
+    ]
+
+    YEAR_CHOICES = [
+        ('FE', 'First Year (FE)'),
+        ('SE', 'Second Year (SE)'),
+        ('TE', 'Third Year (TE)'),
+        ('BE', 'Fourth Year (BE)'),
+    ]
     name = models.CharField(max_length=50)
     branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, default="COMPS")
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
@@ -74,14 +89,9 @@ class Results(models.Model):
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name="result_sport")
     branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, blank=True)
     position = models.PositiveIntegerField(help_text="1 for 1st, 2 for 2nd, 3 for 3rd")
-
-    # 1. The Sport-Specific Score (Manually Adjusted by Admin)
     score = models.PositiveIntegerField(default=0, help_text="Points earned in the match/game itself")
-
-    # 2. The Department Contribution (Auto-Calculated 3-2-1 based on Position)
     points = models.PositiveIntegerField(default=0, editable=False,
                                          help_text="Auto-calculated: 3 for 1st, 2 for 2nd, 1 for 3rd")
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

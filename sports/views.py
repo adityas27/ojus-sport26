@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum, Max
 from rest_framework.views import APIView
 from authentication.models import Student
-from .models import Sport, Registration, Team, Results
-from .serializers import SportSerializer, RegistrationSerializer, TeamSerializer
+from .models import Sport, Registration, Team, Results, TeamRequest
+from .serializers import SportSerializer, RegistrationSerializer, TeamSerializer, TeamCreateSerializer, TeamRequestSerializer
 from .serializers import (
     ResultsSerializer,
     ResultUpdateSerializer,
@@ -741,3 +741,12 @@ def check_user_admin_status(request):
         "is_staff": request.user.is_staff,
         "is_superuser": request.user.is_superuser
     }, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_team_status(request, sport_slug):
+    sport = get_object_or_404(Sport, slug=sport_slug)
+    team = Team.objects.filter(sport=sport, members=request.user).first()
+    if team:
+        return Response({"in_team": True, "team": {"id": team.id, "name": team.name}})
+    return Response({"in_team": False, "team": None})

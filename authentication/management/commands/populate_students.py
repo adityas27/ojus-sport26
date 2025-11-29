@@ -54,9 +54,9 @@ class Command(BaseCommand):
                     student.save()
                     students_created += 1
                     
-                    self.stdout.write(
-                        self.style.SUCCESS(f'Created student {moodle_id}')
-                    )
+                    # self.stdout.write(
+                    #     self.style.SUCCESS(f'Created student {moodle_id}')
+                    # )
                     
                 except Exception as e:
                     self.stdout.write(
