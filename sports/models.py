@@ -28,16 +28,24 @@ class Sport(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     isTeamBased = models.BooleanField(default=False)
-    primary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='primary_sports')
+    primary = models.ManyToManyField(User, on_delete=models.SET_NULL, null=True, related_name='primary_sports')
     secondary = models.ManyToManyField(User, related_name='secondary_sports', blank=True)
     venue = models.CharField(max_length=50, default="")
     is_finalized = models.BooleanField(default=False)
+    teamSize = models.IntegerField(default=0)
+    day = models.IntegerField(default=1,max=5)
+    time = models.CharField(max_length=0, default="")
+    img = models.URLField()
+
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
+    
 class Registration(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
