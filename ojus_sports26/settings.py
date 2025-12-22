@@ -163,6 +163,6 @@ AUTH_USER_MODEL = 'authentication.Student'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://ojus.apsit.edu.in/",
-    "https://ojus-2025.vercel.app/"
+    "https://ojus.apsit.edu.in",
+    "https://ojus-2025.vercel.app",
 ]

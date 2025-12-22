@@ -28,13 +28,13 @@ class Sport(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     isTeamBased = models.BooleanField(default=False)
-    primary = models.ManyToManyField(User, null=True, related_name='primary_sports')
+    primary = models.ManyToManyField(User, related_name='primary_sports')
     secondary = models.ManyToManyField(User, related_name='secondary_sports', blank=True)
     venue = models.CharField(max_length=50, default="")
     is_finalized = models.BooleanField(default=False)
     teamSize = models.IntegerField(default=0)
     day = models.IntegerField(default=1)
-    time = models.CharField(max_length=0, default="")
+    time = models.CharField(max_length=5, default="")
     img = models.URLField()
 
 
