@@ -25,7 +25,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-5iansg2f9m9!o=w1)a&gm!7ykm)n!cm1)k&+5)go)^-fp8086p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["ojus-sport26.onrender.com", "34.180.73.149"]
 
