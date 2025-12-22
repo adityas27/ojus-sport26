@@ -35,7 +35,7 @@ class Sport(models.Model):
     teamSize = models.IntegerField(default=0)
     day = models.IntegerField(default=1)
     time = models.CharField(max_length=5, default="")
-    img = models.URLField()
+    img = models.URLField(default="")
 
 
     def save(self, *args, **kwargs):
