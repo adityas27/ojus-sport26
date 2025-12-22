@@ -3,3 +3,4 @@ __pycache__
 db.sqlite3
 .env
 students1.csv
+staticfiles

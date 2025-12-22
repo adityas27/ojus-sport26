@@ -8,4 +8,6 @@ PyJWT==2.10.1
 sqlparse==0.5.3
 tzdata==2025.2
 gunicorn
+pandas
+whitenoise
 python-dotenv==1.2.1
