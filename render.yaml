@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: drf-test-deploy
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn ojus_sports26.wsgi:application"
+    envVars:
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: admin@example.com
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
