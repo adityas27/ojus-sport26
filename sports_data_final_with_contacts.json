@@ -1,0 +1,835 @@
+{
+  "indoor": {
+    "day1": [
+      {
+        "id": 1,
+        "name": "Badminton Singles (Boys)",
+        "slug": "badminton-singles-boys",
+        "description": "Individual badminton tournament for boys. Players compete one-on-one in singles matches showcasing agility, reflexes, and strategic shot placement.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Sandesh Sarode",
+            "",
+            "8850409126"
+          ],
+          [
+            "Krish shirpat",
+            "",
+            "9987445344"
+          ],
+          [
+            "Ritesh Pandey",
+            "23106058",
+            "9960435308"
+          ],
+          [
+            "Rohit Prajapati",
+            "",
+            "8928043313"
+          ],
+          [
+            "Kushal Khadelwal",
+            "23104020",
+            "8655253588"
+          ],
+          [
+            "Mayuresh Sonawane",
+            "",
+            "9082773125"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Badminton Singles (Girls)",
+        "slug": "badminton-singles-girls",
+        "description": "Individual badminton tournament for girls. Players compete one-on-one in singles matches showcasing agility, reflexes, and strategic shot placement.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Sandesh Sarode",
+            "",
+            "8850409126"
+          ],
+          [
+            "Krish shirpat",
+            "",
+            "9987445344"
+          ],
+          [
+            "Ritesh Pandey",
+            "23106058",
+            "9960435308"
+          ],
+          [
+            "Rohit Prajapati",
+            "",
+            "8928043313"
+          ],
+          [
+            "Kushal Khadelwal",
+            "23104020",
+            "8655253588"
+          ],
+          [
+            "Mayuresh Sonawane",
+            "",
+            "9082773125"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Badminton Doubles (Boys)",
+        "slug": "badminton-doubles-boys",
+        "description": "Doubles badminton tournament for boys. Teams of two players coordinate to cover the court, combining power and precision in fast-paced rallies.",
+        "isTeamBased": true,
+        "teamLimit": 2,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Sandesh Sarode",
+            "",
+            "8850409126"
+          ],
+          [
+            "Krish shirpat",
+            "",
+            "9987445344"
+          ],
+          [
+            "Ritesh Pandey",
+            "23106058",
+            "9960435308"
+          ],
+          [
+            "Rohit Prajapati",
+            "",
+            "8928043313"
+          ],
+          [
+            "Kushal Khadelwal",
+            "23104020",
+            "8655253588"
+          ],
+          [
+            "Mayuresh Sonawane",
+            "",
+            "9082773125"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Badminton Doubles (Girls)",
+        "slug": "badminton-doubles-girls",
+        "description": "Doubles badminton tournament for girls. Teams of two players coordinate to cover the court, combining power and precision in fast-paced rallies.",
+        "isTeamBased": true,
+        "teamLimit": 2,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Sandesh Sarode",
+            "",
+            "8850409126"
+          ],
+          [
+            "Krish shirpat",
+            "",
+            "9987445344"
+          ],
+          [
+            "Ritesh Pandey",
+            "23106058",
+            "9960435308"
+          ],
+          [
+            "Rohit Prajapati",
+            "",
+            "8928043313"
+          ],
+          [
+            "Kushal Khadelwal",
+            "23104020",
+            "8655253588"
+          ],
+          [
+            "Mayuresh Sonawane",
+            "",
+            "9082773125"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Carrom Singles (Boys)",
+        "slug": "carrom-singles-boys",
+        "description": "Individual carrom board tournament for boys. Players demonstrate precision and strategy to pocket carrom men using the striker on a wooden board.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Pranali Sawdekar",
+            "24104171",
+            "8879099226"
+          ],
+          [
+            "Kavya Karani",
+            "",
+            "7977502512"
+          ],
+          [
+            "Shivam Pandey",
+            "24104179",
+            "7738818657"
+          ],
+          [
+            "Anubhav tiwari",
+            "",
+            "7208510600"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Carrom Singles (Girls)",
+        "slug": "carrom-singles-girls",
+        "description": "Individual carrom board tournament for girls. Players demonstrate precision and strategy to pocket carrom men using the striker on a wooden board.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Pranali Sawdekar",
+            "24104171",
+            "8879099226"
+          ],
+          [
+            "Kavya Karani",
+            "",
+            "7977502512"
+          ],
+          [
+            "Shivam Pandey",
+            "24104179",
+            "7738818657"
+          ],
+          [
+            "Anubhav tiwari",
+            "",
+            "7208510600"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "name": "Carrom Doubles (Boys)",
+        "slug": "carrom-doubles-boys",
+        "description": "Doubles carrom tournament for boys. Pairs work together in turns, strategizing to pocket their pieces while blocking opponents.",
+        "isTeamBased": true,
+        "teamLimit": 2,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Pranali Sawdekar",
+            "24104171",
+            "8879099226"
+          ],
+          [
+            "Kavya Karani",
+            "",
+            "7977502512"
+          ],
+          [
+            "Shivam Pandey",
+            "24104179",
+            "7738818657"
+          ],
+          [
+            "Anubhav tiwari",
+            "",
+            "7208510600"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Carrom Doubles (Girls)",
+        "slug": "carrom-doubles-girls",
+        "description": "Doubles carrom tournament for girls. Pairs work together in turns, strategizing to pocket their pieces while blocking opponents.",
+        "isTeamBased": true,
+        "teamLimit": 2,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Pranali Sawdekar",
+            "24104171",
+            "8879099226"
+          ],
+          [
+            "Kavya Karani",
+            "",
+            "7977502512"
+          ],
+          [
+            "Shivam Pandey",
+            "24104179",
+            "7738818657"
+          ],
+          [
+            "Anubhav tiwari",
+            "",
+            "7208510600"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "name": "Chess (Boys)",
+        "slug": "chess-boys",
+        "description": "Individual chess tournament for boys. Players engage in tactical battles on the 64-square board, demonstrating strategic thinking and foresight.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Nirmala Sahu",
+            "24104102",
+            "9082074614"
+          ],
+          [
+            "Amey Sheteye",
+            "",
+            "7777020247"
+          ],
+          [
+            "Mahipal Singh solanki",
+            "24104074",
+            "8369760406"
+          ],
+          [
+            "Santoshi Metkel",
+            "",
+            "7350518482"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "name": "Chess (Girls)",
+        "slug": "chess-girls",
+        "description": "Individual chess tournament for girls. Players engage in tactical battles on the 64-square board, demonstrating strategic thinking and foresight.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "26-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Nirmala Sahu",
+            "24104102",
+            "9082074614"
+          ],
+          [
+            "Amey Sheteye",
+            "",
+            "7777020247"
+          ],
+          [
+            "Mahipal Singh solanki",
+            "24104074",
+            "8369760406"
+          ],
+          [
+            "Santoshi Metkel",
+            "",
+            "7350518482"
+          ]
+        ]
+      }
+    ],
+    "day2": [
+      {
+        "id": 11,
+        "name": "Table Tennis Singles (Boys)",
+        "slug": "table-tennis-singles-boys",
+        "description": "Individual table tennis tournament for boys. Fast-paced singles matches testing reflexes, spin control, and quick decision-making skills.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "27-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Chinmay",
+            "23107001",
+            "9324998443"
+          ],
+          [
+            "Namrata Lalan",
+            "",
+            "9664174996"
+          ],
+          [
+            "Tanushree Gabhane",
+            "24104154",
+            "8180919810"
+          ],
+          [
+            "Pushkaraj Narkhede",
+            "",
+            "9920201999"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "name": "Table Tennis Singles (Girls)",
+        "slug": "table-tennis-singles-girls",
+        "description": "Individual table tennis tournament for girls. Fast-paced singles matches testing reflexes, spin control, and quick decision-making skills.",
+        "isTeamBased": false,
+        "teamLimit": 0,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "27-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Chinmay",
+            "23107001",
+            "9324998443"
+          ],
+          [
+            "Namrata Lalan",
+            "",
+            "9664174996"
+          ],
+          [
+            "Tanushree Gabhane",
+            "24104154",
+            "8180919810"
+          ],
+          [
+            "Pushkaraj Narkhede",
+            "",
+            "9920201999"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "name": "Table Tennis Doubles (Boys)",
+        "slug": "table-tennis-doubles-boys",
+        "description": "Doubles table tennis tournament for boys. Partners alternate shots in high-speed rallies, requiring coordination and synchronized gameplay.",
+        "isTeamBased": true,
+        "teamLimit": 2,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "27-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Chinmay",
+            "23107001",
+            "9324998443"
+          ],
+          [
+            "Namrata Lalan",
+            "",
+            "9664174996"
+          ],
+          [
+            "Tanushree Gabhane",
+            "24104154",
+            "8180919810"
+          ],
+          [
+            "Pushkaraj Narkhede",
+            "",
+            "9920201999"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "name": "Table Tennis Doubles (Girls)",
+        "slug": "table-tennis-doubles-girls",
+        "description": "Doubles table tennis tournament for girls. Partners alternate shots in high-speed rallies, requiring coordination and synchronized gameplay.",
+        "isTeamBased": true,
+        "teamLimit": 2,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "27-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "Chinmay",
+            "23107001",
+            "9324998443"
+          ],
+          [
+            "Namrata Lalan",
+            "",
+            "9664174996"
+          ],
+          [
+            "Tanushree Gabhane",
+            "24104154",
+            "8180919810"
+          ],
+          [
+            "Pushkaraj Narkhede",
+            "",
+            "9920201999"
+          ]
+        ]
+      }
+    ],
+    "day4": [
+      {
+        "id": 18,
+        "name": "Box Cricket (Boys)",
+        "slug": "box-cricket-boys",
+        "description": "Indoor box cricket tournament for boys. Modified cricket format played in a confined space with unique rules, emphasizing quick reflexes and innovative shots.",
+        "isTeamBased": true,
+        "teamLimit": 6,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "30-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "VEDANT MAYEKAR",
+            "24106085",
+            "8591432538"
+          ],
+          [
+            "Atharva Nilesh Naik",
+            "",
+            "8451994730"
+          ]
+        ]
+      },
+      {
+        "id": 19,
+        "name": "Box Cricket (Girls)",
+        "slug": "box-cricket-girls",
+        "description": "Indoor box cricket tournament for girls. Modified cricket format played in a confined space with unique rules, emphasizing quick reflexes and innovative shots.",
+        "isTeamBased": true,
+        "teamLimit": 6,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "30-12-2025",
+        "category": "indoor",
+        "co-ordinators": [
+          [
+            "VEDANT MAYEKAR",
+            "24106085",
+            "8591432538"
+          ],
+          [
+            "Atharva Nilesh Naik",
+            "",
+            "8451994730"
+          ]
+        ]
+      }
+    ]
+  },
+  "outdoor": {
+    "day2": [
+      {
+        "id": 15,
+        "name": "Dodgeball (Girls)",
+        "slug": "dodgeball-girls",
+        "description": "Team dodgeball tournament for girls. Teams throw balls to eliminate opponents while dodging incoming throws, combining agility, teamwork, and quick reflexes.",
+        "isTeamBased": true,
+        "teamLimit": 6,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "27-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Jinal Jain",
+            "24102116",
+            "9321604628"
+          ],
+          [
+            "Bhavin Jain",
+            "",
+            "9372524949"
+          ],
+          [
+            "Pravin Jain",
+            "",
+            "9321412310"
+          ]
+        ]
+      }
+    ],
+    "day3": [
+      {
+        "id": 16,
+        "name": "Cricket Over-arm (Boys)",
+        "slug": "cricket-over-arm-boys",
+        "description": "Traditional over-arm cricket tournament for boys. Full 11-player teams compete in standard cricket format with batting, bowling, and fielding.",
+        "isTeamBased": true,
+        "teamLimit": 11,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "29-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Anmol Kanojia",
+            "24106152",
+            "8976188405"
+          ],
+          [
+            "Nishit Jain",
+            "",
+            "8200801599"
+          ],
+          [
+            "Manthan Pandrekar",
+            "",
+            "9082181808"
+          ]
+        ]
+      },
+      {
+        "id": 17,
+        "name": "Tug of War (Boys)",
+        "slug": "tug-of-war-boys",
+        "description": "Team tug of war competition for boys. Teams pull on opposite ends of a rope, testing collective strength, coordination, and endurance.",
+        "isTeamBased": true,
+        "teamLimit": 8,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "29-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Swayam Kale",
+            "24106148",
+            "7039432582"
+          ],
+          [
+            "Vinit Rajendra Sankhala",
+            "",
+            "8983880285"
+          ]
+        ]
+      }
+    ],
+    "day4": [
+      {
+        "id": 20,
+        "name": "Kabaddi (Boys)",
+        "slug": "kabaddi-boys",
+        "description": "Traditional kabaddi tournament for boys. Raiders tag opponents while holding breath (chanting 'kabaddi'), while defenders work to restrain them. A test of stamina, strategy, and strength.",
+        "isTeamBased": true,
+        "teamLimit": 7,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "30-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Vedant Surve",
+            "24104094",
+            "9870188262"
+          ],
+          [
+            "Anurag Yadav",
+            "",
+            "8356860168"
+          ]
+        ]
+      },
+      {
+        "id": 21,
+        "name": "Kabaddi (Girls)",
+        "slug": "kabaddi-girls",
+        "description": "Traditional kabaddi tournament for girls. Raiders tag opponents while holding breath (chanting 'kabaddi'), while defenders work to restrain them. A test of stamina, strategy, and strength.",
+        "isTeamBased": true,
+        "teamLimit": 7,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "30-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Vedant Surve",
+            "24104094",
+            "9870188262"
+          ],
+          [
+            "Anurag Yadav",
+            "",
+            "8356860168"
+          ]
+        ]
+      }
+    ],
+    "day5": [
+      {
+        "id": 22,
+        "name": "Volleyball (Boys)",
+        "slug": "volleyball-boys",
+        "description": "Team volleyball tournament for boys. Teams of 6 players spike, block, and dig to score points over the net, requiring coordination and athletic prowess.",
+        "isTeamBased": true,
+        "teamLimit": 6,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "31-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Rishabh Mishra",
+            "23104080",
+            "9167991241"
+          ],
+          [
+            "Kedar Meerashi",
+            "",
+            "9130499409"
+          ]
+        ]
+      },
+      {
+        "id": 23,
+        "name": "Throwball (Girls)",
+        "slug": "throwball-girls",
+        "description": "Team throwball tournament for girls. Players throw the ball over the net to score points, combining elements of volleyball with throwing techniques.",
+        "isTeamBased": true,
+        "teamLimit": 7,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "31-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Prathamesh More",
+            "24106196",
+            "8180919810"
+          ],
+          [
+            "Komal Bundhate",
+            "",
+            "8087674933"
+          ]
+        ]
+      },
+      {
+        "id": 24,
+        "name": "Kho-Kho (Girls)",
+        "slug": "kho-kho-girls",
+        "description": "Traditional kho-kho tournament for girls. Chasers and defenders alternate in this fast-paced tag game requiring speed, agility, and strategic positioning.",
+        "isTeamBased": true,
+        "teamLimit": 9,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "31-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Sumiran Deepak Pote",
+            "24106113",
+            "7021041166"
+          ],
+          [
+            "Shrutika Yashwant Mane",
+            "",
+            "7977347161"
+          ]
+        ]
+      },
+      {
+        "id": 25,
+        "name": "Football (Boys)",
+        "slug": "football-boys",
+        "description": "Team football tournament for boys. Standard 11-a-side soccer matches with teams competing to score goals through passing, dribbling, and teamwork.",
+        "isTeamBased": true,
+        "teamLimit": 11,
+        "venue": "",
+        "is_finalized": false,
+        "img_url": "",
+        "day": "31-12-2025",
+        "category": "outdoor",
+        "co-ordinators": [
+          [
+            "Tanmay Padule",
+            "23104156",
+            "8779556101"
+          ],
+          [
+            "Riddesh Samadiya",
+            "",
+            "9130222873"
+          ]
+        ]
+      }
+    ]
+  }
+}
