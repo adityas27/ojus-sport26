@@ -19,7 +19,7 @@ class SportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sport
-        fields = ['slug','id', 'name', 'description', 'isTeamBased', 'primary', 'secondary', 'participants_count']
+        fields = ['slug','id', 'name', 'description', 'isTeamBased', 'primary', 'teamSize','secondary', 'participants_count']
 
     def get_participants_count(self, obj):
         return obj.registration_set.count()

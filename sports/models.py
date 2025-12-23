@@ -83,6 +83,7 @@ class Team(models.Model):
     manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='managed_teams')
     captain = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='captain_teams')
     members = models.ManyToManyField(User, related_name="team_members", blank=True)
+    teamSize = models.IntegerField(default=0)
     class Meta:
         indexes = [
             models.Index(fields=['sport', 'branch']),
