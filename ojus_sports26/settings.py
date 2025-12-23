@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5iansg2f9m9!o=w1)a&gm!7ykm)n!cm1)k&+5)go)^-fp8086p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ojus-sport26.onrender.com", "34.180.73.149", "https://specialist-apart-chrome-metadata.trycloudflare.com"]
+ALLOWED_HOSTS = ["ojus-sport26.onrender.com", "34.180.73.149", "*.trycloudflare.com"]
 
 
 # Application definition
@@ -56,7 +56,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-CSRF_TRUSTED_ORIGINS = ['https://specialist-apart-chrome-metadata.trycloudflare.com']
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = ['*.trycloudflare.com']
 ROOT_URLCONF = 'ojus_sports26.urls'
 
 TEMPLATES = [
