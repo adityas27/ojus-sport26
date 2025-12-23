@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SportSerializer(serializers.ModelSerializer):
-    primary = UserSerializer(read_only=True)
+    primary = UserSerializer(many=True, read_only=True)
     secondary = UserSerializer(many=True, read_only=True)
     participants_count = serializers.SerializerMethodField()
 
