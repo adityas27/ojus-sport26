@@ -199,7 +199,6 @@ def create_team(request, sport_slug):
     # Add the captain as a member of the team as well
     
     if captain_user:
-        print(captain_user)
         team.members.add(captain_user)
 
     resp = TeamSerializer(team, context={'request': request})
