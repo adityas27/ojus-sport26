@@ -47,6 +47,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         registration = Registration.objects.create(
             student=self.context['request'].user,
+            branch = self.context['request'].user.branch,
             sport=sport,
             **validated_data
         )
