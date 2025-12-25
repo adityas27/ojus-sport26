@@ -29,7 +29,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     student = UserSerializer(read_only=True)
     sport = SportSerializer(read_only=True)
     sport_slug = serializers.SlugField(write_only=True)
-
+    branch = serializers.CharField(read_only=True)
+    year = serializers.CharField(read_only=True)
     class Meta:
         model = Registration
         fields = [
@@ -48,7 +49,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         registration = Registration.objects.create(
             student=user,
-            branch =user.branch,
+            branch=user.branch,
             sport=sport,
             **validated_data
         )
