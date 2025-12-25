@@ -92,6 +92,13 @@ def registration_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        reg = True   
+        if not reg:
+            return Response(
+            {"error": "Registrations closed"},
+            status=status.HTTP_403_FORBIDDEN
+            )
+
         serializer = RegistrationSerializer(data=request.data, context={'request': request})
         sport_slug = request.data.get('sport_slug')
         sport = get_object_or_404(Sport, slug=sport_slug)
