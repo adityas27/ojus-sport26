@@ -50,6 +50,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         registration = Registration.objects.create(
             student=user,
             branch=user.branch,
+            year=user.year,
             sport=sport,
             **validated_data
         )
