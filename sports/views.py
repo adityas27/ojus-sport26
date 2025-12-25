@@ -98,7 +98,7 @@ def registration_list(request):
 
         # preventing duplicate entry
         existing_registration = Registration.objects.filter(
-            student=request.user, sport=sport, branch=request.user.branch
+            student=request.user, sport=sport
         ).first()
 
         if existing_registration:
@@ -107,6 +107,7 @@ def registration_list(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         if serializer.is_valid():
+            serializer["branch"] = request.user.branch
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
