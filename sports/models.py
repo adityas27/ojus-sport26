@@ -50,7 +50,7 @@ class Registration(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, default="FE")
-    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, default="COMPS")
+    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES)
     registered_on = models.DateTimeField(auto_now_add=True)
     registration_modified = models.DateTimeField(auto_now=True)
     class Meta:
@@ -78,7 +78,7 @@ class Team(models.Model):
         ('BE', 'Fourth Year (BE)'),
     ]
     name = models.CharField(max_length=50)
-    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, default="COMPS")
+    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
     manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='managed_teams')
     captain = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='captain_teams')

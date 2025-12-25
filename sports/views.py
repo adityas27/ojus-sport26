@@ -98,7 +98,7 @@ def registration_list(request):
 
         # preventing duplicate entry
         existing_registration = Registration.objects.filter(
-            student=request.user, sport=sport
+            student=request.user, sport=sport, branch=request.user.branch
         ).first()
 
         if existing_registration:
@@ -196,7 +196,6 @@ def create_team(request, sport_slug):
             captain_user = possible
 
     team = Team.objects.create(name=name, branch=branch, sport=sport, manager=request.user, captain=captain_user)
-    # Add the captain as a member of the team as well
     
     if captain_user:
         team.members.add(captain_user)
