@@ -40,14 +40,15 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         sport_slug = validated_data.pop('sport_slug')
+        user = self.context['request'].user
         try:
             sport = Sport.objects.get(slug=sport_slug)
         except Sport.DoesNotExist:
             raise serializers.ValidationError({"sport_slug": "Invalid sport slug"})
 
         registration = Registration.objects.create(
-            student=self.context['request'].user,
-            branch = self.context['request'].user.branch,
+            student=user,
+            branch =user.branch,
             sport=sport,
             **validated_data
         )

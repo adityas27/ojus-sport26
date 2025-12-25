@@ -95,7 +95,7 @@ def registration_list(request):
         serializer = RegistrationSerializer(data=request.data, context={'request': request})
         sport_slug = request.data.get('sport_slug')
         sport = get_object_or_404(Sport, slug=sport_slug)
-
+    
         # preventing duplicate entry
         existing_registration = Registration.objects.filter(
             student=request.user, sport=sport
