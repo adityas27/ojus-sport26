@@ -467,12 +467,12 @@ def update_sport_leaderboard(request, sport_slug):
     result_ids = list(rank_updates.keys())
 
     # Fetch results to update
-    results_to_update = list(
-        Results.objects.filter(id__in=result_ids, sport=sport).select_for_update()
+    results1 = list(
+        Results.objects.filter(id__in=result_ids, sport=sport)
     )
 
     # Verify all IDs exist for this sport
-    if len(results_to_update) != len(rank_updates):
+    if len(results1) != len(rank_updates):
         return Response(
             {"error": "Some result IDs are invalid or don't belong to this sport."},
             status=status.HTTP_400_BAD_REQUEST
@@ -498,6 +498,10 @@ def update_sport_leaderboard(request, sport_slug):
 
     try:
         with transaction.atomic():
+            # Fetch results to update
+            results_to_update = list(
+                Results.objects.filter(id__in=result_ids, sport=sport).select_for_update()
+            )
             # Update positions and recalculate points
             for result in results_to_update:
                 new_position = rank_updates[result.id]
