@@ -42,7 +42,8 @@ class Command(BaseCommand):
                             'teamSize': sport_data.get('teamLimit', 0),
                             'day': day_number,
                             'time': sport_data.get('time', ''),
-                            'img': sport_data.get('img_url', '')
+                            'img': sport_data.get('img_url', ''),
+                            'category': sport_data.get('category', '')
                         }
                     )
 

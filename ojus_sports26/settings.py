@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5iansg2f9m9!o=w1)a&gm!7ykm)n!cm1)k&+5)go)^-fp8086p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ojus-sport26.onrender.com", "34.180.73.149", ".trycloudflare.com"]
+ALLOWED_HOSTS = ["ojus-sport26.onrender.com", "34.180.73.149", ".trycloudflare.com", "127.0.0.1"]
 
 
 # Application definition
@@ -83,22 +83,22 @@ WSGI_APPLICATION = 'ojus_sports26.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ojus',
-        'USER': 'ojus_user',
-        'PASSWORD': 'Apsit2k25!',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ojus',
+#         'USER': 'ojus_user',
+#         'PASSWORD': 'Apsit2k25!',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
