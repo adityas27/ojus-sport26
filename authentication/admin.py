@@ -7,7 +7,7 @@ class StudentAdmin(UserAdmin):
     model = Student
     list_display = ('moodleID', 'username', 'email', 'display_profile_image', 'phone_number',
                    'is_prohibited', 'is_staff', 'is_superuser', 'is_active', 'date_joined')
-    list_filter = ('is_prohibited', 'is_active', 'is_staff', 'is_superuser')
+    list_filter = ('is_prohibited', 'is_active', 'is_staff', 'is_superuser', 'branch')
     search_fields = ('username', 'email', 'phone_number', 'first_name', 'last_name', 'moodleID')
     ordering = ('username',)
     list_per_page = 20
