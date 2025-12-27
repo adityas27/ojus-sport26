@@ -9,17 +9,17 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['moodleID', 'username', 'email']
+        fields = ['moodleID', 'username', 'email', 'first_name', 'last_name']
 
 
 class SportSerializer(serializers.ModelSerializer):
-    primary = UserSerializer(read_only=True)
+    primary = UserSerializer(many=True, read_only=True)
     secondary = UserSerializer(many=True, read_only=True)
     participants_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Sport
-        fields = ['slug','id', 'name', 'description', 'isTeamBased', 'primary', 'secondary', 'participants_count']
+        fields = ['slug','id', 'name', 'description', 'isTeamBased', 'primary', 'teamSize','secondary', 'participants_count']
 
     def get_participants_count(self, obj):
         return obj.registration_set.count()
@@ -29,7 +29,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     student = UserSerializer(read_only=True)
     sport = SportSerializer(read_only=True)
     sport_slug = serializers.SlugField(write_only=True)
-
+    branch = serializers.CharField(read_only=True)
+    year = serializers.CharField(read_only=True)
     class Meta:
         model = Registration
         fields = [
@@ -40,13 +41,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         sport_slug = validated_data.pop('sport_slug')
+        user = self.context['request'].user
         try:
             sport = Sport.objects.get(slug=sport_slug)
         except Sport.DoesNotExist:
             raise serializers.ValidationError({"sport_slug": "Invalid sport slug"})
 
         registration = Registration.objects.create(
-            student=self.context['request'].user,
+            student=user,
+            branch=user.branch,
+            year=user.year,
             sport=sport,
             **validated_data
         )

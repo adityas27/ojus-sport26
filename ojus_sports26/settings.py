@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5iansg2f9m9!o=w1)a&gm!7ykm)n!cm1)k&+5)go)^-fp8086p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ojus-sport26.onrender.com"]
+ALLOWED_HOSTS = ["ojus-sport26.onrender.com", "34.180.73.149", ".trycloudflare.com"]
 
 
 # Application definition
@@ -57,6 +57,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = ["https://*.trycloudflare.com", "https://ojus-sport26.onrender.com"]
 ROOT_URLCONF = 'ojus_sports26.urls'
 
 TEMPLATES = [
@@ -85,10 +88,7 @@ WSGI_APPLICATION = 'ojus_sports26.wsgi.application'
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
-
 # }
-
-# Paste right credentials before deployment
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -126,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -157,8 +157,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'moodleID',
     'USER_ID_CLAIM': 'user_id',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
 }
 
 
@@ -167,4 +167,6 @@ AUTH_USER_MODEL = 'authentication.Student'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://ojus.apsit.edu.in",
+    "https://ojus-2025.vercel.app",
 ]

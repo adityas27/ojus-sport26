@@ -28,21 +28,29 @@ class Sport(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     isTeamBased = models.BooleanField(default=False)
-    primary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='primary_sports')
+    primary = models.ManyToManyField(User, related_name='primary_sports')
     secondary = models.ManyToManyField(User, related_name='secondary_sports', blank=True)
     venue = models.CharField(max_length=50, default="")
     is_finalized = models.BooleanField(default=False)
+    teamSize = models.IntegerField(default=0)
+    day = models.IntegerField(default=1)
+    time = models.CharField(max_length=5, default="")
+    img = models.URLField(default="")
+
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
+    
 class Registration(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, default="FE")
-    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, default="COMPS")
+    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES)
     registered_on = models.DateTimeField(auto_now_add=True)
     registration_modified = models.DateTimeField(auto_now=True)
     class Meta:
@@ -70,11 +78,12 @@ class Team(models.Model):
         ('BE', 'Fourth Year (BE)'),
     ]
     name = models.CharField(max_length=50)
-    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES, default="COMPS")
+    branch = models.CharField(max_length=6, choices=BRANCH_CHOICES)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
     manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='managed_teams')
     captain = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='captain_teams')
     members = models.ManyToManyField(User, related_name="team_members", blank=True)
+    teamSize = models.IntegerField(default=0)
     class Meta:
         indexes = [
             models.Index(fields=['sport', 'branch']),

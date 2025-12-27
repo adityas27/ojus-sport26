@@ -92,10 +92,17 @@ def registration_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        reg = True   
+        if not reg:
+            return Response(
+            {"error": "Registrations closed"},
+            status=status.HTTP_403_FORBIDDEN
+            )
+
         serializer = RegistrationSerializer(data=request.data, context={'request': request})
         sport_slug = request.data.get('sport_slug')
         sport = get_object_or_404(Sport, slug=sport_slug)
-
+    
         # preventing duplicate entry
         existing_registration = Registration.objects.filter(
             student=request.user, sport=sport
@@ -108,7 +115,7 @@ def registration_list(request):
             )
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -186,7 +193,7 @@ def create_team(request, sport_slug):
 
     # create team: manager and captain default to current user unless captain_moodleID provided and valid
     name = serializer.validated_data.get('name')
-    branch = serializer.validated_data.get('branch', 'COMPS')
+    branch = request.user.branch
     captain_moodle = serializer.validated_data.get('captain_moodleID', None)
 
     captain_user = request.user
@@ -196,10 +203,8 @@ def create_team(request, sport_slug):
             captain_user = possible
 
     team = Team.objects.create(name=name, branch=branch, sport=sport, manager=request.user, captain=captain_user)
-    # Add the captain as a member of the team as well
     
     if captain_user:
-        print(captain_user)
         team.members.add(captain_user)
 
     resp = TeamSerializer(team, context={'request': request})

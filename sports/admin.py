@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Sport, Registration, Team, TeamRequest
+from .models import Sport, Registration, Team, TeamRequest, Results
 
 @admin.register(Sport)
 class SportAdmin(admin.ModelAdmin):
@@ -23,10 +23,10 @@ class SportAdmin(admin.ModelAdmin):
 
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
-    list_display = ('student', 'sport', 'year', 'branch', 'registered_on')
+    list_display = ('student__first_name','student__last_name', 'sport', 'year', 'branch', 'registered_on')
     list_filter = ('year', 'branch', 'sport', 'registered_on')
     search_fields = ('student__username', 'student__email', 'sport__name')
-    date_hierarchy = 'registered_on'
+    # date_hierarchy = 'registered_on'
     readonly_fields = ('registered_on', 'registration_modified')
 
 @admin.register(Team)
@@ -41,3 +41,4 @@ class TeamAdmin(admin.ModelAdmin):
     get_members_count.short_description = 'Team Members'
 
 admin.site.register(TeamRequest)
+admin.site.register(Results)
