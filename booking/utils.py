@@ -7,12 +7,11 @@ TOTAL_CAPACITY = 1200
 
 
 def _get_redis_client():
-    url = os.environ.get('UPSTASH_REDIS_URL') or os.environ.get('REDIS_URL')
+    url = os.environ.get('UPSTASH_REDIS_URL')
     if not url:
         return None
     try:
         import redis
-        # redis.from_url supports rediss:// as well
         return redis.from_url(url, decode_responses=True)
     except Exception:
         return None
@@ -43,8 +42,6 @@ def get_remaining_seats():
                 return int(val)
         except Exception:
             client = None
-
-    # Fallback to DB
     try:
         booked = Bookings.objects.count()
     except Exception as e:

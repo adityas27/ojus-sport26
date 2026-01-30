@@ -112,6 +112,7 @@ def get_remaining(request):
 @permission_classes([IsAuthenticated])
 def my_booking(request):
     student = request.user
+    print(request)
     booking = Bookings.objects.filter(student=student).first()
     if not booking:
         return JsonResponse({'booking': None}, status=status.HTTP_404_NOT_FOUND)
