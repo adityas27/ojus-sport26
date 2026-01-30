@@ -40,9 +40,7 @@ class Event(models.Model):
     
 
 class Registration(models.Model):
-    student = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='cultural_registrations'
-    )
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cultural_registrations')
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, default="FE")
     registered_on = models.DateTimeField(auto_now_add=True)
@@ -54,4 +52,4 @@ class Registration(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.student.username} - {self.event.name}"
+        return f"{self.student.username} - {self.event.name}"                          
