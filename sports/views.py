@@ -468,35 +468,46 @@ def update_sport_leaderboard(request, sport_slug):
     result_ids = list(rank_updates.keys())
 
     # Fetch results to update
-    results_to_update = list(
-        Results.objects.filter(id__in=result_ids, sport=sport).select_for_update()
+    results1 = list(
+        Results.objects.filter(id__in=result_ids, sport=sport)
     )
 
     # Verify all IDs exist for this sport
-    if len(results_to_update) != len(rank_updates):
+    if len(results1) != len(rank_updates):
         return Response(
             {"error": "Some result IDs are invalid or don't belong to this sport."},
             status=status.HTTP_400_BAD_REQUEST
         )
 
     # Helper function to calculate department points
-    def calculate_dept_points(position):
+    def calculate_dept_points(position, category):
         """Calculate department points: 3 for 1st, 2 for 2nd, 1 for 3rd"""
-        if position == 1:
-            return 3
-        elif position == 2:
-            return 2
-        elif position == 3:
-            return 1
-        return 0
+        if category == 'indoor':
+            if position == 1:
+                return 10
+            elif position == 2:
+                return 5
+            return 0
+        elif category == 'outdoor':
+            if position == 1:
+                return 20
+            elif position == 2:
+                return 10
+            return 0
+        else:
+            return "Incorrect category"
 
     try:
         with transaction.atomic():
+            # Fetch results to update
+            results_to_update = list(
+                Results.objects.filter(id__in=result_ids, sport=sport).select_for_update()
+            )
             # Update positions and recalculate points
             for result in results_to_update:
                 new_position = rank_updates[result.id]
                 result.position = new_position
-                result.points = calculate_dept_points(new_position)
+                result.points = calculate_dept_points(new_position, result.sport.category)
 
             # Bulk update for better performance
             Results.objects.bulk_update(results_to_update, ['position', 'points'])
