@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'authentication',
     'sports',
+    'cultural',
+    'booking',
+    'channels',
+    'channels_redis',
 ]
 
 MIDDLEWARE = [
@@ -89,16 +93,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ojus',
-        'USER': 'ojus_user',
-        'PASSWORD': 'Apsit2k25!',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ojus',
+#         'USER': 'ojus_user',
+#         'PASSWORD': 'Apsit2k25!',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
 
 
 # Password validation
@@ -169,3 +175,28 @@ CORS_ALLOWED_ORIGINS = [
     "https://ojus.apsit.edu.in",
     "https://ojus-2025.vercel.app",
 ]
+
+## WEBSOCKET SUPPORT FROM UPSTASH
+ASGI_APPLICATION = 'ojus_sports26.asgi.application'
+
+# Use UPSTASH_REDIS_URL environment variable if provided. Format example:
+# UPSTASH_REDIS_URL="redis://default:password@host:port"
+UPSTASH_REDIS_URL = os.environ.get('UPSTASH_REDIS_URL') or os.environ.get('REDIS_URL')
+
+if UPSTASH_REDIS_URL:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [UPSTASH_REDIS_URL],
+            },
+        },
+    }
+else:
+    # Fallback to in-memory channel layer (not for production). Keeps app running
+    # if Redis env var is missing during development or Redis is down.
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        },
+    }

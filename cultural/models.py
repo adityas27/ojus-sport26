@@ -18,8 +18,12 @@ class Event(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     registeration = models.BooleanField(default=False)
-    primary = models.ManyToManyField(User, related_name='primary_sports', blank=True)
-    secondary = models.ManyToManyField(User, related_name='secondary_sports', blank=True)
+    primary = models.ManyToManyField(
+        User, related_name='cultural_primary_events', blank=True
+    )
+    secondary = models.ManyToManyField(
+        User, related_name='cultural_secondary_events', blank=True
+    )
     venue = models.CharField(max_length=50, default="")
     day = models.IntegerField(default=1)
     time = models.CharField(max_length=5, default="")
@@ -36,7 +40,7 @@ class Event(models.Model):
     
 
 class Registration(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cultural_registrations')
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, default="FE")
     registered_on = models.DateTimeField(auto_now_add=True)
@@ -48,4 +52,4 @@ class Registration(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.student.username} - {self.event.name}"
+        return f"{self.student.username} - {self.event.name}"                          

@@ -34,5 +34,5 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(
-            self.style.SUCCESS("Superuser created successfully.")
+            self.style.SUCCESS(f"Superuser created successfully. {moodle_id}-{password}")
         )
