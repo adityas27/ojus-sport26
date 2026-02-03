@@ -23,6 +23,12 @@ YEAR_CHOICES = [
     ('TE', 'Third Year (TE)'),
     ('BE', 'Fourth Year (BE)'),
 ]
+CATEGORY_CHOICES = [
+    ('indoor', 'Indoor'),
+    ('outdoor', 'Outdoor'),
+    ('TE', 'Third Year (TE)'),
+    ('BE', 'Fourth Year (BE)'),
+]
 class Sport(models.Model):
     slug = models.SlugField(unique=True, blank=True, max_length=255)
     name = models.CharField(max_length=50)
@@ -36,7 +42,7 @@ class Sport(models.Model):
     day = models.IntegerField(default=1)
     time = models.CharField(max_length=5, default="")
     img = models.URLField(default="")
-
+    category =  models.CharField(max_length=7, choices=CATEGORY_CHOICES, default='indoor')
 
     def save(self, *args, **kwargs):
         if not self.slug:
