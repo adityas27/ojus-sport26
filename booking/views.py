@@ -116,12 +116,14 @@ def my_booking(request):
     booking = Bookings.objects.filter(student=student).first()
     if not booking:
         return JsonResponse({'booking': None}, status=status.HTTP_404_NOT_FOUND)
-
+    url = "127.0.0.1:8000"
     data = {
+        'moodleID': student.moodleID,
         'first_name': student.first_name,
         'last_name': student.last_name,
-        'year': booking.year,
+        'year': student.year,
         'registered_on': booking.registered_on.isoformat(),
+        "url":f"https://{url}/booking/mark-present/{student.moodleID}",
     }
     return JsonResponse({'booking': data})
 

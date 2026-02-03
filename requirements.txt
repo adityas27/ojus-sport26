@@ -1,3 +1,6 @@
+# Aggregated Python dependencies for the project
+# Sourced from backend/requirements.txt and project usage (channels, channels-redis, redis)
+
 asgiref==3.10.0
 Django==5.2.7
 django-cors-headers==4.9.0
@@ -11,3 +14,13 @@ gunicorn
 pandas
 whitenoise
 python-dotenv==1.2.1
+
+# WebSocket / Channels
+channels
+channels-redis
+redis
+
+# Optional / dev (uncomment to install)
+# pytest
+# pytest-django
+# coverage

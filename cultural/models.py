@@ -39,12 +39,11 @@ class Event(models.Model):
         return self.name
     
 
-class Registration(models.Model):
+class  Registration(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cultural_registrations')
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, default="FE")
     registered_on = models.DateTimeField(auto_now_add=True)
-    
     class Meta:
         unique_together = ['student', 'event']
         indexes = [

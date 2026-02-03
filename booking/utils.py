@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import DatabaseError
 from .models import Bookings
 
-TOTAL_CAPACITY = 1200
+TOTAL_CAPACITY = 5
 
 
 def _get_redis_client():

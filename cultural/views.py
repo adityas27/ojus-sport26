@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-from .models import Registration
+from rest_framework import status
+from .models import Registration, Event
 from .serializers import RegistrationSerializer
 
 
@@ -11,13 +11,27 @@ from .serializers import RegistrationSerializer
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_registration(request):
-    serializer = RegistrationSerializer(data=request.data)
 
+    serializer = RegistrationSerializer(data=request.data, context={'request': request})
+    event_slug = request.data.get('event_slug')
+    event = get_object_or_404(Event, slug=event_slug)
+
+    # preventing duplicate entry
+    existing_registration = Registration.objects.filter(
+        student=request.user, event=event
+    ).first()
+
+    if existing_registration:
+        return Response(
+            {"error": "You have already registered for this event."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
     if serializer.is_valid():
-        serializer.save(student=request.user)
-        return Response(serializer.data, status=201)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(serializer.errors, status=400)
+
 
 
 # List Registrations for Authenticated User
