@@ -52,4 +52,26 @@ class  Registration(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.student.username} - {self.event.name}"                          
+        return f"{self.student.username} - {self.event.name}"
+
+
+# Small Teams support (only for certain events)
+TEAM_EVENTS = ['valorant', 'paintball']
+
+class Team(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='teams')
+    name = models.CharField(max_length=100)
+    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='led_teams')
+    members = models.ManyToManyField(User, related_name='teams', blank=True)
+    secondary_contact_number = models.CharField(max_length=10, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # prevent duplicate team names for same event
+        unique_together = [('event', 'name')]
+        indexes = [
+            models.Index(fields=['event', 'leader']),
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.event.slug})" 
