@@ -44,6 +44,7 @@ class  Registration(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, default="FE")
     registered_on = models.DateTimeField(auto_now_add=True)
+    attended = models.BooleanField(default=False)
     class Meta:
         unique_together = ['student', 'event']
         indexes = [

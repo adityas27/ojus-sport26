@@ -51,13 +51,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Must be high in the list
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -87,23 +87,23 @@ WSGI_APPLICATION = 'ojus_sports26.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ojus',
-        'USER': 'ojus_user',
-        'PASSWORD': 'Apsit2k25!',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ojus',
+#         'USER': 'ojus_user',
+#         'PASSWORD': 'Apsit2k25!',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 
@@ -174,7 +174,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://ojus.apsit.edu.in",
     "https://ojus-2025.vercel.app",
+    "https://cycles-annual-essay-handles.trycloudflare.com",
 ]
+
+# Allow any subdomain under trycloudflare.com (useful for dynamic preview URLs)
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.trycloudflare\.com$",
+]
+
+# If your frontend sends cookies (session auth), enable credentials
+CORS_ALLOW_CREDENTIALS = True
 
 ## WEBSOCKET SUPPORT FROM UPSTASH
 ASGI_APPLICATION = 'ojus_sports26.asgi.application'
