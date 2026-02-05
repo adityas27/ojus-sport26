@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth import get_user_model
 from .models import Registration, Event, Team, TEAM_EVENTS
 from .serializers import RegistrationSerializer, TeamCreateSerializer, TeamSerializer
 
@@ -112,3 +113,55 @@ def registration_detail(request, pk):
     elif request.method == 'DELETE':
         registration.delete()
         return Response(status=204)
+
+
+# Mark team as attended (only for is_managing users, paintball only)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_team_attended(request):
+    # verify user is managing
+    if not request.user.is_managing:
+        return Response({"error": "Only managing volunteers can access this"}, status=status.HTTP_403_FORBIDDEN)
+
+    leader_moodle_id = request.data.get('leader_moodle_id')
+    if not leader_moodle_id:
+        return Response({"error": "leader_moodle_id required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # get paintball event
+    paintball_event = get_object_or_404(Event, slug='paintball')
+
+    # find team where leader has that moodle id
+    try:
+        leader = get_user_model().objects.get(moodleID=leader_moodle_id)
+    except get_user_model().DoesNotExist:
+        return Response({"error": f"User with Moodle ID {leader_moodle_id} not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # find team
+    team = get_object_or_404(Team, event=paintball_event, leader=leader)
+
+    # mark team as attended
+    team.attended = True
+    team.save()
+
+    # also mark all team members' individual registrations as attended (if any)
+    for member in team.members.all():
+        reg = Registration.objects.filter(student=member, event=paintball_event).first()
+        if reg:
+            reg.attended = True
+            reg.save()
+
+    return Response({"message": f"Team '{team.name}' marked as attended"}, status=status.HTTP_200_OK)
+
+
+# Get teams for paintball (for attendance management)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def paintball_teams_attendance(request):
+    # verify user is managing
+    if not request.user.is_managing:
+        return Response({"error": "Only managing volunteers can access this"}, status=status.HTTP_403_FORBIDDEN)
+
+    paintball_event = get_object_or_404(Event, slug='paintball')
+    teams = Team.objects.filter(event=paintball_event)
+    serializer = TeamSerializer(teams, many=True)
+    return Response(serializer.data)

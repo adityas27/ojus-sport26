@@ -103,13 +103,27 @@ class TeamCreateSerializer(serializers.Serializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     event_slug = serializers.CharField(source='event.slug', read_only=True)
-    leader = serializers.IntegerField(source='leader.moodleID', read_only=True)
+    leader = serializers.SerializerMethodField()
     members = serializers.SerializerMethodField()
 
     class Meta:
         model = Team
-        fields = ['id', 'event_slug', 'name', 'leader', 'members', 'secondary_contact_number', 'created_on']
+        fields = ['id', 'event_slug', 'name', 'leader', 'members', 'secondary_contact_number', 'attended', 'created_on']
+
+    def get_leader(self, obj):
+        return {
+            'moodleID': getattr(obj.leader, 'moodleID', None),
+            'first_name': getattr(obj.leader, 'first_name', '') or None,
+            'last_name': getattr(obj.leader, 'last_name', '') or None,
+        }
 
     def get_members(self, obj):
-        return [u.moodleID for u in obj.members.all()]
+        return [
+            {
+                'moodleID': getattr(u, 'moodleID', None),
+                'first_name': getattr(u, 'first_name', '') or None,
+                'last_name': getattr(u, 'last_name', '') or None,
+            }
+            for u in obj.members.all()
+        ]
         

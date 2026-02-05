@@ -65,7 +65,7 @@ class Team(models.Model):
     members = models.ManyToManyField(User, related_name='teams', blank=True)
     secondary_contact_number = models.CharField(max_length=10, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
-
+    attended = models.BooleanField(default=False)
     class Meta:
         # prevent duplicate team names for same event
         unique_together = [('event', 'name')]

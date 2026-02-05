@@ -10,4 +10,8 @@ urlpatterns = [
     path('teams/create/', views.create_team, name='cultural-team-create'),
     path('teams/my/', views.my_teams, name='cultural-my-teams'),
     path('teams/event/<slug:slug>/', views.event_teams, name='cultural-event-teams'),
+
+    # Attendance management
+    path('teams/attendance/mark/', views.mark_team_attended, name='cultural-mark-team-attended'),
+    path('teams/attendance/paintball/', views.paintball_teams_attendance, name='cultural-paintball-teams-attendance'),
 ]
