@@ -161,7 +161,11 @@ def paintball_teams_attendance(request):
     if not request.user.is_managing:
         return Response({"error": "Only managing volunteers can access this"}, status=status.HTTP_403_FORBIDDEN)
 
-    paintball_event = get_object_or_404(Event, slug='paintball')
+    try:
+        paintball_event = Event.objects.get(slug='paintball')
+    except Event.DoesNotExist:
+        return Response({"error": "Paintball event not found"}, status=status.HTTP_404_NOT_FOUND)
+    
     teams = Team.objects.filter(event=paintball_event)
     serializer = TeamSerializer(teams, many=True)
     return Response(serializer.data)

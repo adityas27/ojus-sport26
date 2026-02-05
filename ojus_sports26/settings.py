@@ -87,23 +87,18 @@ WSGI_APPLICATION = 'ojus_sports26.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DA 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ojus',
+        'USER': 'ojus_user',
+        'PASSWORD': 'Apsit2k25!',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ojus',
-#         'USER': 'ojus_user',
-#         'PASSWORD': 'Apsit2k25!',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 
 
 
